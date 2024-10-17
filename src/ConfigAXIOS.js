@@ -1,13 +1,18 @@
 
 
 import axios from 'axios';
+import store from './store';
 
-const iAX = axios.create();
+const iAX = axios.create({
+    baseUrl: 'https://reqres.in/api',
+    headers: {'Content-type': 'application/json'}
+});
 
 
 iAX.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('token'); // Aquí asumimos que guardas el token en localStorage
+    config => {
+        const token = store.getState().taller3.info.token; 
+       
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
@@ -17,3 +22,5 @@ iAX.interceptors.request.use(
         return Promise.reject(error);
     }
 );
+
+export default iAX; 

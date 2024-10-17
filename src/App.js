@@ -1,40 +1,38 @@
-import axios from 'axios';
 
+import { useDispatch } from "react-redux";
+import { setINFO } from "./reducers";
+import iAX from "./ConfigAXIOS";
+import {Button} from "react-bootstrap";
 
+function App() {
+  const disp = useDispatch();
+  
+  
+  async function getToken() {
 
-
-
-
-  async function createUser() {
+    
     try {
+
+      const loginAndGetToken = await iAX.post("https://reqres.in/api/login", {
+        email: "eve.holt@reqres.in",
+        password: "cityslicka",
+      });
+
+      disp(setINFO(loginAndGetToken.data.token));
+
       
-      const getToken = await iAX.post("https://reqres.in/api/login", {
-          email: "eve.holt@reqres.in",
-          password: "cityslicka",
-      });
-
-      const token = getToken.data.token;
-      localStorage.setItem('token', token); 
-
-     
-      const userResponse = await iAX.post("https://reqres.in/api/users", {
-          name: "RAGAR",
-          job: "FS-G262",
-      });
-
-      const userId = userResponse.data.id; 
-      console.log("Usuario creado con ID:", userId);
-
-     
-      const fetchUserResponse = await iAX.get(`https://reqres.in/api/users/${userId}`);
-      console.log("Usuario consultado:", fetchUserResponse.data);
-
-  } catch (error) {
+    } catch (error) {
       console.error("Error:", error);
+    }
   }
+
+  return(
+  <>
+    <Button onClick={getToken}> 
+      Obtener token
+    </Button>
+  </>
+  );
 }
 
-
-export default createUser();
-
-  
+export default App;
