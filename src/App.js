@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+
+
+
+  async function createUser() {
+    try {
+      
+      const getToken = await iAX.post("https://reqres.in/api/login", {
+          email: "eve.holt@reqres.in",
+          password: "cityslicka",
+      });
+
+      const token = getToken.data.token;
+      localStorage.setItem('token', token); 
+
+     
+      const userResponse = await iAX.post("https://reqres.in/api/users", {
+          name: "RAGAR",
+          job: "FS-G262",
+      });
+
+      const userId = userResponse.data.id; 
+      console.log("Usuario creado con ID:", userId);
+
+     
+      const fetchUserResponse = await iAX.get(`https://reqres.in/api/users/${userId}`);
+      console.log("Usuario consultado:", fetchUserResponse.data);
+
+  } catch (error) {
+      console.error("Error:", error);
+  }
 }
 
-export default App;
+
+export default createUser();
+
+    
